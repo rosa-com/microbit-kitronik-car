@@ -1,0 +1,32 @@
+# Declare and initialise the variables. This isn't necessary as you could send the value without the variable but it makes it easier for viewing and continuity
+# Radio group links the 2 micro:bits. The value can be anything (from 0-255) as long as they are the same on both micro:bits.
+radio.set_group(56)
+
+forwards = 1
+backwards = 2
+left = 3
+right = 4
+stop = 5
+
+# Use the sensor motions so it can function as a remote.
+# If there were other things that needed to happen in the case of a gesture it could be written here or on the receiver's recievedVal loop
+
+def on_gesture_logo_up():
+    radio.send_number(forwards)
+input.on_gesture(Gesture.LOGO_UP, on_gesture_logo_up)
+
+def on_gesture_tilt_left():
+    radio.send_number(left)
+input.on_gesture(Gesture.TILT_LEFT, on_gesture_tilt_left)
+
+def on_gesture_tilt_right():
+    radio.send_number(right)
+input.on_gesture(Gesture.TILT_RIGHT, on_gesture_tilt_right)
+
+def on_gesture_logo_down():
+    radio.send_number(backwards)
+input.on_gesture(Gesture.LOGO_DOWN, on_gesture_logo_down)
+
+def on_button_pressed_a():
+    radio.send_number(stop)
+input.on_button_pressed(Button.A, on_button_pressed_a)
