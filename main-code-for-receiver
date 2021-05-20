@@ -1,0 +1,67 @@
+# Code by Roselyn rosa-com on GitHub
+# Ideally receivedVal would just be declared but it could cause an error as lower down in the code, it needs a value but doesn't know it is sent from micro:bit 1
+receivedVal = 0
+basic.show_icon(IconNames.HAPPY)
+radio.set_group(56)
+
+def on_received_number(receivedNumber):
+    global receivedVal
+
+		# Received value links to the gesture made by the other micro:bit
+    receivedVal = receivedNumber
+    # Switch statement could be used as this elif has only numerical values
+    # The options for turning the car is a 'pivot' turn or a gradual turn. Here I have shown a gradual turn where the car continuously goes forward while turning instead of going on a pivot
+    if receivedVal == 1:
+        basic.show_arrow(ArrowNames.NORTH)
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR1,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            # Formatted like this for easier viewing of the values
+            50)
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR2,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            50)
+    elif receivedVal == 2:
+        basic.show_arrow(ArrowNames.SOUTH)
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR1,
+            kitronik_motor_driver.MotorDirection.REVERSE,
+            50)
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR2,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            50)
+    elif receivedVal == 3:
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR1,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            50)
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR2,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            20)
+        basic.show_arrow(ArrowNames.WEST)
+    elif receivedVal == 4:
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR1,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            20)
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR2,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            50)
+        basic.show_arrow(ArrowNames.EAST)
+    # Stopping the car. 'break' could be used to break out of the loop but in this case, you are temporarily stopping the car and it will continue with gestures
+		# A pause could be put in place if needed using 'basic.pause(value)'. Note: they use milliseconds.
+		elif recievedVal == 5:
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR1,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            0)
+        kitronik_motor_driver.motor_on(kitronik_motor_driver.Motors.MOTOR1,
+            kitronik_motor_driver.MotorDirection.FORWARD,
+            0)
+    else:
+        # A default error message or an indicator if a a gesture isn't detected (it's unlikely this will be shown as gestures are a constant). 
+        basic.show_leds("""
+            . . . . .
+            . # . # .
+            . . . . .
+            . # # # .
+            # . . . #
+            """)
+
+# The receiving is constant, it's also an indefinite loop. However, condition 5 allows for pressing the 'a' button to stop both motors essentially stopping it but still allowing to continuing.
+radio.on_received_number(on_received_number)
